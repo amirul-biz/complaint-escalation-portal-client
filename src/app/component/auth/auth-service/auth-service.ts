@@ -19,20 +19,28 @@ export class AuthService {
   }
 
   login(req: ILogin): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/login`, req).pipe(
-      tap((accessToken: string) => {
-        this.setToken(accessToken);
+    return this.http
+      .post<string>(`${this.apiUrl}/login`, req, {
+        withCredentials: true,
       })
-    );
+      .pipe(
+        tap((accessToken: string) => {
+          this.setToken(accessToken);
+        })
+      );
   }
 
   getNewToken(): Observable<string> {
-    return this.http.get<string>(`${this.apiUrl}/refresh-token`).pipe(
-      map((accesstoken) => {
-        this.setToken(accesstoken);
-        return accesstoken;
+    return this.http
+      .get<string>(`${this.apiUrl}/refresh-token`, {
+        withCredentials: true,
       })
-    );
+      .pipe(
+        map((accesstoken) => {
+          this.setToken(accesstoken);
+          return accesstoken;
+        })
+      );
   }
 
   logout() {
