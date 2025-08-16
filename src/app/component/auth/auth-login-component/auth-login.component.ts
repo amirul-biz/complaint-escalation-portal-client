@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../auth-service/auth-service';
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 export interface ILoginForm {
   email: FormControl<string>;
@@ -16,9 +18,9 @@ export interface ILoginForm {
   styleUrls: ['./auth-login.component.scss'],
 })
 export class ComponentAuthLogin {
-  // Fully typed FormGroup
   form: FormGroup<ILoginForm>;
   service = inject(AuthService);
+  readonly #router = inject(Router);
 
   constructor() {
     this.form = new FormGroup<ILoginForm>({
@@ -32,10 +34,9 @@ export class ComponentAuthLogin {
 
   onSubmit() {
     if (this.form.invalid) return;
-
-    const loginData = this.form.value; // Typed as { email: string; password: string }
-    console.log('Login submitted', loginData);
-
-    this.service.login(this.form.getRawValue()).subscribe();
+    this.service
+      .login(this.form.getRawValue())
+      .pipe(finalize(() => this.#router.navigate(['/complaint'])))
+      .subscribe();
   }
 }
