@@ -75,7 +75,7 @@
         </tr>
       </thead>
       <tbody>
-        @if(complaintData?.items){ @for (complaint of complaintData.items; track complaint.id; let i
+        @if(complaintData.items){ @for (complaint of complaintData.items; track complaint.id; let i
         = $index) {
         <tr class="text-center">
           <td>{{ i + 1 }}</td>

@@ -11,6 +11,8 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { routes } from './app.routes';
 import { AuthInterceptor } from './component/auth/auth-interceptor/auth-interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [

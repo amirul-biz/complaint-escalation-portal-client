@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { ComponentAuthLogin } from './component/auth/auth-login-component/auth-login.component';
-import { ComplaintPageModeEnum } from './complaint/complaint.pageMode.enum';
+import { AuthGuard } from './guards/guard-auth';
 
 export const routes: Routes = [
   {
@@ -9,6 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'complaint',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('../app/complaint/complaint-component/complaint-component').then(
         (c) => c.ComplaintComponent

@@ -1,9 +1,9 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
-import { ILogin, IAuthToken } from '../../../interfaces/interface.auth';
-
+import { Router } from '@angular/router';
+import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
+import { IAuthError, IAuthToken, ILogin } from '../../../interfaces/interface.auth';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,7 +12,11 @@ export class AuthService {
   private readonly apiUrl = 'http://localhost:3000';
   readonly $accessToken = new BehaviorSubject<string>('');
 
-  constructor(private readonly http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    private readonly http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router
+  ) {
     if (isPlatformBrowser(this.platformId)) {
       this.$accessToken.next(sessionStorage.getItem(this.TOKEN_KEY) || '');
     }
@@ -28,6 +32,14 @@ export class AuthService {
           this.setToken(response.token);
         })
       );
+  }
+
+  clearRefreshToken() {
+    this.http
+      .delete(`${this.apiUrl}/logout`, {
+        withCredentials: true,
+      })
+      .subscribe();
   }
 
   getNewToken(): Observable<string> {
@@ -61,7 +73,51 @@ export class AuthService {
   private removeToken(): void {
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem(this.TOKEN_KEY);
+      this.$accessToken.next('');
+      this.triggerCurrentRoute();
     }
-    this.$accessToken.next('');
+    this.clearRefreshToken();
+  }
+
+  triggerCurrentRoute() {
+    const currentUrl = this.router.url.split('?')[0].split('#')[0];
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
+
+  private decodeToken(token: string): any | null {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decoded);
+    } catch {
+      return null;
+    }
+  }
+
+  async isLoggedIn(): Promise<boolean> {
+    const token = this.getToken();
+    if (!token) return false;
+
+    const decoded = this.decodeToken(token);
+    if (!decoded?.exp) return false;
+
+    const now = Math.floor(Date.now() / 1000);
+    const isExpired = decoded.exp < now;
+
+    if (!isExpired) return true;
+
+    try {
+      await firstValueFrom(this.getNewToken());
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  httpErrorHandler(error: IAuthError) {
+    alert(`error status: ${error.status}\nmessage: ${error.message}`);
+    return of(null);
   }
 }

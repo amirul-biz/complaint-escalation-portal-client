@@ -1,13 +1,15 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { finalize, forkJoin, tap } from 'rxjs';
+import { catchError, tap, forkJoin } from 'rxjs';
 import { ComplaintForm } from '../complaint-form/complaint-form';
 import { getComplaintForm } from '../complaint-form/complaint-form.config';
 import { ComplaintService } from '../complaint-service/complaint-service';
 import { StatusEnum } from '../complaint.enums';
 import { ICreateComplaintRequest, IPriority, IStatus } from '../complaint.interface';
 import { ComplaintPageModeEnum } from '../complaint.pageMode.enum';
+import { IAuthError } from '../../interfaces/interface.auth';
+import { AuthService } from '../../component/auth/auth-service/auth-service';
 
 @Component({
   selector: 'app-complaint-add-edit-component',
@@ -24,19 +26,26 @@ export class ComplaintAddComponent {
   statusList!: IStatus[];
   location = inject(Location);
   pageModeEnum = ComplaintPageModeEnum;
+  authService = inject(AuthService);
 
   ngOnInit() {
     this.getMetadata();
     if (this.pageMode === ComplaintPageModeEnum.Edit) {
       this.getEditActions();
     }
-
-    console.log(this.pageMode);
   }
 
   getMetadata() {
-    const statusList = this.complaintService.getStatuses();
-    const priorityList = this.complaintService.getPriorities();
+    const statusList = this.complaintService.getStatuses().pipe(
+      catchError((error: IAuthError) => {
+        return this.authService.httpErrorHandler(error);
+      })
+    );
+    const priorityList = this.complaintService.getPriorities().pipe(
+      catchError((error: IAuthError) => {
+        return this.authService.httpErrorHandler(error);
+      })
+    );
 
     forkJoin({
       statusList,
@@ -44,8 +53,8 @@ export class ComplaintAddComponent {
     })
       .pipe(
         tap(({ statusList, priorityList }) => {
-          this.statusList = statusList;
-          this.priorityList = priorityList;
+          this.statusList = statusList as IStatus[];
+          this.priorityList = priorityList as IPriority[];
         })
       )
       .subscribe();
@@ -67,6 +76,9 @@ export class ComplaintAddComponent {
           const controls = this.form.controls;
           const disabledControl = [controls.title, controls.description, controls.priorityId];
           disabledControl.forEach((control) => control.disable());
+        }),
+        catchError((error: IAuthError) => {
+          return this.authService.httpErrorHandler(error);
         })
       )
       .subscribe();
@@ -81,9 +93,12 @@ export class ComplaintAddComponent {
         priorityId: form.priorityId,
       } as ICreateComplaintRequest)
       .pipe(
-        finalize(() => {
+        tap(() => {
           alert('New Complaint created Successfully');
           this.location.back();
+        }),
+        catchError((error: IAuthError) => {
+          return this.authService.httpErrorHandler(error);
         })
       )
       .subscribe();
@@ -96,9 +111,12 @@ export class ComplaintAddComponent {
         statusId: form.statusId as StatusEnum,
       })
       .pipe(
-        finalize(() => {
+        tap(() => {
           alert('Complaint updated Successfully');
           this.location.back();
+        }),
+        catchError((error: IAuthError) => {
+          return this.authService.httpErrorHandler(error);
         })
       )
       .subscribe();

@@ -1,6 +1,8 @@
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn } from '@angular/common/http';
+import { HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError, Observable } from 'rxjs';
+import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { HttpStatusCodeEnum } from '../../../enums/enum.httpStatusCode';
+import { IAuthError } from '../../../interfaces/interface.auth';
 import { AuthService } from '../auth-service/auth-service';
 
 const addBearerToken = (req: HttpRequest<any>, token: string): HttpRequest<any> => {
@@ -28,11 +30,14 @@ const handleUnauthorized = (
   authService: AuthService,
   req: HttpRequest<any>,
   next: HttpHandlerFn,
-  error: any,
+  error: IAuthError,
   token: string
 ): Observable<any> => {
-  if (error.status === 401 && token) {
+  if (error.status === HttpStatusCodeEnum.UNAUTHORIZED && token) {
     return handleTokenRefresh(authService, req, next, error);
+  }
+  if (error.status === HttpStatusCodeEnum.FORBIDDEN) {
+    authService.logout();
   }
   return throwError(() => error);
 };
