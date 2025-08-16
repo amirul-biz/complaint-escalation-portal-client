@@ -1,0 +1,35 @@
+<!-- component-auth-login.html -->
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <!-- Email -->
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" type="email" formControlName="email" />
+
+    @if (form.controls.email.invalid && form.controls.email.touched) {
+    <div style="color: red">
+      @if (form.controls.email.errors?.['required']) {
+      <span>Email is required.</span>
+      } @if (form.controls.email.errors?.['email']) {
+      <span>Email must be valid.</span>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Password -->
+  <div>
+    <label for="password">Password:</label>
+    <input id="password" type="password" formControlName="password" />
+
+    @if (form.controls.password.invalid && form.controls.password.touched) {
+    <div style="color: red">
+      @if (form.controls.password.errors?.['required']) {
+      <span>Password is required.</span>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Submit button -->
+  <button type="submit" [disabled]="form.invalid">Login</button>
+</form>
