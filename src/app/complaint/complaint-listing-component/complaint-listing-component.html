@@ -1,5 +1,5 @@
 <!-- Start of Listing form -->
-<div class="my-5 text-center"><h2>Complaint Listing</h2></div>
+<div class="my-5 text-center"><h2>Complaint Escalation Listing</h2></div>
 
 @if (form) {
 <form [formGroup]="form">
@@ -26,7 +26,13 @@
       <button type="button" class="btn btn-primary me-2" (click)="getComplainListing().subscribe()">
         Search
       </button>
-      <button type="button" class="btn btn-warning me-2">+ Create Complaint</button>
+      <button
+        type="button"
+        class="btn btn-warning me-2"
+        (click)="router.navigate(['/complaint', pageModeEnum.Add])"
+      >
+        + Add complaint
+      </button>
       <button type="button" class="btn btn-secondary" (click)="resetSearch()">Reset</button>
     </div>
   </div>
@@ -69,11 +75,18 @@
         </tr>
       </thead>
       <tbody>
-        @if(complaintData.complaints.length > 0){ @for (complaint of complaintData.complaints; track
-        complaint.id; let i = $index) {
+        @if(complaintData?.items){ @for (complaint of complaintData.items; track complaint.id; let i
+        = $index) {
         <tr class="text-center">
           <td>{{ i + 1 }}</td>
-          <td>{{ complaint.id }}</td>
+          <td>
+            <a
+              style="cursor: pointer"
+              class="link-opacity-100-hover"
+              [routerLink]="['/complaint', pageModeEnum.Edit, complaint.id]"
+              >{{ complaint.id }}</a
+            >
+          </td>
           <td>{{ complaint.customerName }}</td>
           <td>
             {{ complaint.title }}

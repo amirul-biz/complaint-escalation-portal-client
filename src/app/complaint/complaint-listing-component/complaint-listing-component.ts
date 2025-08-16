@@ -10,20 +10,24 @@ import {
   getListingForm,
   pageSizeOptions,
 } from './complaint-listing-form.config';
+import { Router, RouterModule } from '@angular/router';
+import { ComplaintPageModeEnum } from '../complaint.pageMode.enum';
 
 @Component({
   selector: 'app-complaint-listing-component',
-  imports: [CommonModule, NgbPaginationModule, ReactiveFormsModule],
+  imports: [CommonModule, NgbPaginationModule, ReactiveFormsModule, RouterModule],
   templateUrl: './complaint-listing-component.html',
   styleUrl: './complaint-listing-component.scss',
 })
 export class ComplaintListingComponent implements OnInit {
   complaintService = inject(ComplaintService);
   cdr = inject(ChangeDetectorRef);
+  router = inject(Router);
   form = getListingForm();
   complaintData!: IGetPaginatedComplaintResponse | null;
   statusList!: IStatus[];
   pageSizeOptions = pageSizeOptions;
+  pageModeEnum = ComplaintPageModeEnum;
 
   ngOnInit(): void {
     forkJoin([this.getComplainListing(), this.getStatusList()]).subscribe(() =>

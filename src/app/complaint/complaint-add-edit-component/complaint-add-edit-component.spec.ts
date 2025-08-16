@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ComplaintAddComponent } from './complaint-add-component';
+import { ComplaintAddComponent } from './complaint-add-edit-component';
 
 describe('ComplaintAddComponent', () => {
   let component: ComplaintAddComponent;
@@ -8,9 +8,8 @@ describe('ComplaintAddComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ComplaintAddComponent]
-    })
-    .compileComponents();
+      imports: [ComplaintAddComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ComplaintAddComponent);
     component = fixture.componentInstance;

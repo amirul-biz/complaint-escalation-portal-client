@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
-import { ILogin } from '../../../interfaces/interface.auth';
+import { ILogin, IAuthToken } from '../../../interfaces/interface.auth';
 
 @Injectable({
   providedIn: 'root',
@@ -18,27 +18,27 @@ export class AuthService {
     }
   }
 
-  login(req: ILogin): Observable<string> {
+  login(req: ILogin): Observable<IAuthToken> {
     return this.http
-      .post<string>(`${this.apiUrl}/login`, req, {
+      .post<IAuthToken>(`${this.apiUrl}/login`, req, {
         withCredentials: true,
       })
       .pipe(
-        tap((accessToken: string) => {
-          this.setToken(accessToken);
+        tap((response: IAuthToken) => {
+          this.setToken(response.token);
         })
       );
   }
 
   getNewToken(): Observable<string> {
     return this.http
-      .get<string>(`${this.apiUrl}/refresh-token`, {
+      .get<IAuthToken>(`${this.apiUrl}/refresh-token`, {
         withCredentials: true,
       })
       .pipe(
-        map((accesstoken) => {
-          this.setToken(accesstoken);
-          return accesstoken;
+        map((response: IAuthToken) => {
+          this.setToken(response.token);
+          return response.token;
         })
       );
   }

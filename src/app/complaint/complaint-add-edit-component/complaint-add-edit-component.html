@@ -1,0 +1,36 @@
+@let headerText = pageMode === pageModeEnum.Add ? 'Add' : 'Edit';
+
+<div class="m-t-5 text-center">
+  <h2>{{ headerText }} Complaint</h2>
+</div>
+
+<div class="row mx-5 my-3">
+  <div class="col">
+    <app-complaint-form
+      [form]="form"
+      [priorityList]="priorityList"
+      [statusList]="statusList"
+    ></app-complaint-form>
+  </div>
+</div>
+
+<div class="d-flex my-4 align-items-center justify-content-center">
+  @if(pageMode === pageModeEnum.Add){
+  <div>
+    <button class="btn btn-primary" [disabled]="form.invalid" (click)="addComplaint()">
+      Add complaint
+    </button>
+  </div>
+  } @if(pageMode === pageModeEnum.Edit){
+  <div>
+    <button class="btn btn-primary me-2" [disabled]="form.invalid" (click)="updateComplaint()">
+      Update Complaint
+    </button>
+  </div>
+  }
+  <div>
+    <button class="btn btn-danger" [disabled]="form.invalid" (click)="location.back()">
+      Cancel
+    </button>
+  </div>
+</div>
