@@ -28,12 +28,10 @@ export class ComplaintService {
   getPaginatedComplaints(
     req: IGetPaginatedComplaintRequest
   ): Observable<IGetPaginatedComplaintResponse> {
-    let params = new HttpParams()
-      .set('userId', req.userId)
-      .set('pageNumber', req.pageNumber)
-      .set('pageSize', req.pageSize)
-      .set('statusId', req.statusId)
-      .set('search', req.search);
+    let params = new HttpParams().set('pageNumber', req.pageNumber).set('pageSize', req.pageSize);
+
+    if (req.statusId) params.set('statusId', req.statusId);
+    if (req.search) params.set('search', req.search);
 
     if (req.search) {
       params = params.set('search', req.search);
@@ -42,7 +40,10 @@ export class ComplaintService {
       params = params.set('statusId', req.statusId);
     }
 
-    return this.http.get<IGetPaginatedComplaintResponse>(this.apiUrl, { params });
+    return this.http.get<IGetPaginatedComplaintResponse>(`${this.apiUrl}/complaints-listing`, {
+      params,
+      withCredentials: true,
+    });
   }
 
   createComplaint(request: ICreateComplaintRequest): Observable<IGetComplaintResponse> {

@@ -1,0 +1,133 @@
+<!-- Start of Listing form -->
+<div class="my-5 text-center"><h2>Complaint Listing</h2></div>
+
+@if (form) {
+<form [formGroup]="form">
+  <div class="row d-flex my-5 justify-content-center align-items-end">
+    <div class="col">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Enter keyword"
+        formControlName="search"
+      />
+    </div>
+    <div class="col">
+      <select formControlName="statusId" class="form-select">
+        <option [ngValue]="null" selected>- Select Status -</option>
+        @for (status of statusList; track status.id) {
+        <option [ngValue]="status.id">
+          {{ status.name }}
+        </option>
+        }
+      </select>
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-primary me-2" (click)="getComplainListing().subscribe()">
+        Search
+      </button>
+      <button type="button" class="btn btn-warning me-2">+ Create Complaint</button>
+      <button type="button" class="btn btn-secondary" (click)="resetSearch()">Reset</button>
+    </div>
+  </div>
+</form>
+}
+<!-- End of listing form -->
+
+@if (form) {
+<form [formGroup]="form">
+  <div class="row">
+    <div class="col-1">
+      <select formControlName="pageSize" class="form-select" (change)="pageSizeChange()">
+        @for (pageSize of pageSizeOptions; track $index) {
+        <option [ngValue]="pageSize">
+          {{ pageSize }}
+        </option>
+        }
+      </select>
+    </div>
+  </div>
+</form>
+}
+<!-- Start of listing table -->
+
+@if(complaintData){
+<div class="row mt-5">
+  <div class="col table-responsive table-hover">
+    <table class="table table-bordered">
+      <thead>
+        <tr class="text-center">
+          <th>#</th>
+          <th>Complaint ID</th>
+          <th>Customer Name</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Updated At</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if(complaintData.complaints.length > 0){ @for (complaint of complaintData.complaints; track
+        complaint.id; let i = $index) {
+        <tr class="text-center">
+          <td>{{ i + 1 }}</td>
+          <td>{{ complaint.id }}</td>
+          <td>{{ complaint.customerName }}</td>
+          <td>
+            {{ complaint.title }}
+            @if (complaint.title.length > 100) {
+            <span class="text-muted">(truncated)</span>
+            }
+          </td>
+          <td>{{ complaint.description }}</td>
+          <td>
+            @if (complaint.priority === 'HIGH') {
+            <span class="badge bg-danger">High</span>
+            } @else if (complaint.priority === 'MEDIUM') {
+            <span class="badge bg-warning text-dark">Medium</span>
+            } @else {
+            <span class="badge bg-secondary">Low</span>
+            }
+          </td>
+          <td>
+            @if (complaint.status === 'NEW') {
+            <span class="badge bg-primary">New</span>
+            } @else if (complaint.status === 'IN_PROGRESS') {
+            <span class="badge bg-info text-dark">In Progress</span>
+            } @else if (complaint.status === 'RESOLVED') {
+            <span class="badge bg-success">Resolved</span>
+            } @else {
+            <span class="badge bg-dark">{{ complaint.status }}</span>
+            }
+          </td>
+          <td>{{ complaint.createdAt | date : 'short' }}</td>
+          <td>{{ complaint.updatedAt | date : 'short' }}</td>
+        </tr>
+        } }@else {
+        <tr>
+          <td colspan="100%" class="bg-light text-center">NO RECORD FOUND</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col d-flex justify-content-start"></div>
+  <div class="col d-flex justify-content-end">
+    <ngb-pagination
+      [collectionSize]="complaintData.totalComplaintsCount"
+      [maxSize]="5"
+      [page]="complaintData.pageNumber"
+      [pageSize]="complaintData.pageSize"
+      (pageChange)="pageNumberChange($event)"
+      aria-label="Default pagination"
+    ></ngb-pagination>
+  </div>
+</div>
+}
+
+<!-- End of listing table -->

@@ -12,16 +12,18 @@ export interface IGetComplaintResponse {
 }
 
 export interface IGetPaginatedComplaintRequest {
-  userId: string;
   pageNumber: number;
   pageSize: number;
-  search: string;
-  statusId: string;
+  search?: string | null;
+  statusId?: string | null;
 }
 
 export interface IGetPaginatedComplaintResponse {
   complaints: IGetComplaintResponse[];
   totalPageCount: number;
+  totalComplaintsCount: number;
+  pageNumber: number;
+  pageSize: number;
 }
 
 export interface ICreateComplaintRequest {
@@ -35,10 +37,6 @@ export interface IUpdateComplaintRequest {
   description: string;
   priorityId: PriorityEnum;
   statusId: StatusEnum;
-}
-export interface IUpdateComplaintRequest {
-  statusId: string;
-  priorityId: string;
 }
 
 export interface IPriority {

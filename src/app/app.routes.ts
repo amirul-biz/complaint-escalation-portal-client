@@ -14,10 +14,17 @@ export const routes: Routes = [
       ),
     children: [
       {
-        path: '',
+        path: 'add',
         loadComponent: () =>
           import('../app/complaint/complaint-add-component/complaint-add-component').then(
             (c) => c.ComplaintAddComponent
+          ),
+      },
+      {
+        path: '',
+        loadComponent: () =>
+          import('../app/complaint/complaint-listing-component/complaint-listing-component').then(
+            (c) => c.ComplaintListingComponent
           ),
       },
     ],
