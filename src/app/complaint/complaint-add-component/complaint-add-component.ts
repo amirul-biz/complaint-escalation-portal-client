@@ -2,11 +2,10 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { finalize, forkJoin, tap } from 'rxjs';
-import { AuthService } from '../../component/auth/auth-service/auth-service';
 import { ComplaintForm } from '../complaint-form/complaint-form';
 import { getComplaintForm } from '../complaint-form/complaint-form.config';
-import { ICreateComplaintRequest, IPriority, IStatus } from '../complaint.interface';
 import { ComplaintService } from '../complaint-service/complaint-service';
+import { ICreateComplaintRequest, IPriority, IStatus } from '../complaint.interface';
 
 @Component({
   selector: 'app-complaint-add-component',
@@ -16,7 +15,6 @@ import { ComplaintService } from '../complaint-service/complaint-service';
 })
 export class ComplaintAddComponent {
   complaintService = inject(ComplaintService);
-  authService = inject(AuthService);
   form = getComplaintForm();
   priorityList!: IPriority[];
   statusList!: IStatus[];
