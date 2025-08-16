@@ -9,18 +9,20 @@ import {
   IPriority,
   IStatus,
   IUpdateComplaintRequest,
-} from '../complaint-model';
+} from '../complaint.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComplaintService {
-  private readonly apiUrl = 'http://localhost:3000'; // adjust your base API URL
+  private readonly apiUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 
   getComplaintById(id: string): Observable<IGetComplaintResponse> {
-    return this.http.get<IGetComplaintResponse>(`${this.apiUrl}/${id}`);
+    return this.http.get<IGetComplaintResponse>(`${this.apiUrl}/${id}`, {
+      withCredentials: true,
+    });
   }
 
   getPaginatedComplaints(
@@ -44,18 +46,26 @@ export class ComplaintService {
   }
 
   createComplaint(request: ICreateComplaintRequest): Observable<IGetComplaintResponse> {
-    return this.http.post<IGetComplaintResponse>(this.apiUrl, request);
+    return this.http.post<IGetComplaintResponse>(`${this.apiUrl}/complaints`, request, {
+      withCredentials: true,
+    });
   }
 
   updateComplaint(id: string, request: IUpdateComplaintRequest): Observable<IGetComplaintResponse> {
-    return this.http.put<IGetComplaintResponse>(`${this.apiUrl}/${id}`, request);
+    return this.http.put<IGetComplaintResponse>(`${this.apiUrl}/${id}`, request, {
+      withCredentials: true,
+    });
   }
 
   getPriorities(): Observable<IPriority[]> {
-    return this.http.get<IPriority[]>(`${this.apiUrl}/priorities`);
+    return this.http.get<IPriority[]>(`${this.apiUrl}/priorities`, {
+      withCredentials: true,
+    });
   }
 
   getStatuses(): Observable<IStatus[]> {
-    return this.http.get<IStatus[]>(`${this.apiUrl}/statuses`);
+    return this.http.get<IStatus[]>(`${this.apiUrl}/statuses`, {
+      withCredentials: true,
+    });
   }
 }

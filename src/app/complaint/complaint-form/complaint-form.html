@@ -1,1 +1,101 @@
-<p>complaint-form works!</p>
+@if (form) {
+<form [formGroup]="form">
+  <!-- Title -->
+  <div class="row my-4">
+    <div class="col">
+      <label class="form-label">Title <span class="text-danger">*</span></label>
+      <input
+        type="text"
+        class="form-control"
+        [class.is-invalid]="form.controls.title.invalid && form.controls.title.touched"
+        placeholder="Enter title"
+        formControlName="title"
+      />
+      @if (form.controls.title.invalid && form.controls.title.touched) {
+      <div class="invalid-feedback">
+        @if (form.controls.title.errors?.['required']) { Title is required } @if
+        (form.controls.title.errors?.['maxlength']) { (max 10 chars) }
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="row my-4">
+    <div class="col">
+      <label class="form-label">Description <span class="text-danger">*</span></label>
+      <textarea
+        formControlName="description"
+        rows="4"
+        class="form-control"
+        [class.is-invalid]="form.controls.description.invalid && form.controls.description.touched"
+        placeholder="Enter description"
+      ></textarea>
+      @if (form.controls.description.invalid && form.controls.description.touched) {
+      <div class="invalid-feedback">
+        @if (form.controls.description.errors?.['minlength']) { Description must be at least 30
+        chars. }
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Priority -->
+  <div class="row my-4">
+    <div class="col">
+      <label class="form-label">Priority <span class="text-danger">*</span></label>
+      <select
+        formControlName="priorityId"
+        class="form-select"
+        [class.is-invalid]="form.controls.priorityId.invalid && form.controls.priorityId.touched"
+      >
+        <option [ngValue]="null" disabled selected>- Select Priority -</option>
+        @for (priority of priorityList; track priority.id) {
+        <option [ngValue]="priority.id">
+          {{ priority.name }}
+        </option>
+        }
+      </select>
+      @if (form.controls.priorityId.invalid && form.controls.priorityId.touched) {
+      <div class="invalid-feedback">Please select a priority</div>
+      }
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="row my-4">
+    <div class="col">
+      <label class="form-label">Status <span class="text-danger">*</span></label>
+      <select
+        formControlName="statusId"
+        class="form-select"
+        [class.is-invalid]="form.controls.statusId.invalid && form.controls.statusId.touched"
+      >
+        <option [ngValue]="null" disabled selected>- Select Status -</option>
+        @for (status of statusList; track status.id) {
+        <option [ngValue]="status.id">
+          {{ status.name }}
+        </option>
+        }
+      </select>
+      @if (form.controls.statusId.invalid && form.controls.statusId.touched) {
+      <div class="invalid-feedback">Please select a status</div>
+      }
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div class="row my-4">
+    <div class="col text-end">
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="form.invalid"
+        (click)="submitEmitter.emit()"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</form>
+}

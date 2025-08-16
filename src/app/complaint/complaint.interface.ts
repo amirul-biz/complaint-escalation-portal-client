@@ -27,11 +27,15 @@ export interface IGetPaginatedComplaintResponse {
 export interface ICreateComplaintRequest {
   title: string;
   description: string;
-  userId: string;
-  statusId: StatusEnum;
   priorityId: PriorityEnum;
 }
 
+export interface IUpdateComplaintRequest {
+  title: string;
+  description: string;
+  priorityId: PriorityEnum;
+  statusId: StatusEnum;
+}
 export interface IUpdateComplaintRequest {
   statusId: string;
   priorityId: string;
