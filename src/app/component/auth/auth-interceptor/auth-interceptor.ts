@@ -3,7 +3,6 @@ import { inject } from '@angular/core';
 import { catchError, switchMap, throwError, Observable } from 'rxjs';
 import { AuthService } from '../auth-service/auth-service';
 
-// Token handling utilities
 const addBearerToken = (req: HttpRequest<any>, token: string): HttpRequest<any> => {
   return req.clone({
     setHeaders: { Authorization: `Bearer ${token}` },

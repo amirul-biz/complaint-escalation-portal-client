@@ -1,9 +1,8 @@
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { ILogin } from '../../../interfaces/interface.auth';
-import jwt_decode from 'jwt-decode';
-import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,6 @@ export class AuthService {
   readonly $accessToken = new BehaviorSubject<string>('');
 
   constructor(private readonly http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
-    // Initialize token only in browser environment
     if (isPlatformBrowser(this.platformId)) {
       this.$accessToken.next(sessionStorage.getItem(this.TOKEN_KEY) || '');
     }
@@ -48,8 +46,8 @@ export class AuthService {
   private setToken(token: string): void {
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.setItem(this.TOKEN_KEY, token);
+      this.$accessToken.next(token);
     }
-    this.$accessToken.next(token);
   }
 
   private removeToken(): void {
