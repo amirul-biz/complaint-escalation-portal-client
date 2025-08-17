@@ -30,7 +30,7 @@ Getting Started (Frontend)
 Follow these steps to set up and run the frontend locally:
 
 # 1. Clone the repository
-git clone https://github.com/amirul-biz/complaint-portal-frontend.git
+git clone https://github.com/amirul-biz/complaint-escalation-portal-client.git
 
 # 2. Enter the project folder
 cd complaint-portal-frontend
