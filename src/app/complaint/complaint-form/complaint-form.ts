@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { IComplaintFormModel } from './complaint-form.config';
-import { IPriority, IStatus } from '../complaint.interface';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { IPriority, IStatus } from '../complaint.interface';
+import { IComplaintFormModel } from './complaint-form.config';
 
 @Component({
   selector: 'app-complaint-form',
@@ -15,5 +15,4 @@ export class ComplaintForm {
   @Input() form!: FormGroup<IComplaintFormModel>;
   @Input() priorityList!: IPriority[];
   @Input() statusList!: IStatus[];
-  @Output() submitEmitter = new EventEmitter();
 }

@@ -1,14 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../auth-service/auth-service';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
-
-export interface ILoginForm {
-  email: FormControl<string>;
-  password: FormControl<string>;
-}
+import { catchError, from, of, switchMap, tap } from 'rxjs';
+import { IAuthError } from '../../../interfaces/interface.auth';
+import { AuthService } from '../auth-service/auth-service';
+import { getLoginForm } from './auth-login-form.config';
 
 @Component({
   selector: 'app-auth-login-component',
@@ -17,26 +14,41 @@ export interface ILoginForm {
   templateUrl: './auth-login.component.html',
   styleUrls: ['./auth-login.component.scss'],
 })
-export class ComponentAuthLogin {
-  form: FormGroup<ILoginForm>;
+export class ComponentAuthLogin implements OnInit {
+  form = getLoginForm();
   service = inject(AuthService);
   readonly #router = inject(Router);
+  authService = inject(AuthService);
+  constructor() {}
 
-  constructor() {
-    this.form = new FormGroup<ILoginForm>({
-      email: new FormControl('', {
-        validators: [Validators.required, Validators.email],
-        nonNullable: true,
-      }),
-      password: new FormControl('', { validators: [Validators.required], nonNullable: true }),
-    });
+  async ngOnInit() {
+    const isLoggedIn = await this.authService.isLoggedIn();
+    if (isLoggedIn) {
+      this.#router.navigate(['/complaint']);
+    }
+  }
+
+  async checkUserSession() {
+    const isLoggedIn = await this.authService.isLoggedIn();
+    isLoggedIn ? this.#router.navigate(['/complaint']) : null;
   }
 
   onSubmit() {
     if (this.form.invalid) return;
+
     this.service
       .login(this.form.getRawValue())
-      .pipe(finalize(() => this.#router.navigate(['/complaint'])))
+      .pipe(
+        switchMap(() => from(this.authService.isLoggedIn())),
+        tap((isLoggedIn) => {
+          if (isLoggedIn) {
+            this.#router.navigate(['/complaint']);
+          }
+        }),
+        catchError((error: IAuthError) => {
+          return this.authService.httpErrorHandler(error);
+        })
+      )
       .subscribe();
   }
 }

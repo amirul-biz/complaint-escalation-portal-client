@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { ComponentAuthLogin } from './component/auth/auth-login-component/auth-login.component';
+import { AuthGuard } from './guards/guard-auth';
 
 export const routes: Routes = [
   {
@@ -8,15 +9,23 @@ export const routes: Routes = [
   },
   {
     path: 'complaint',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('../app/complaint/complaint-component/complaint-component').then(
         (c) => c.ComplaintComponent
       ),
     children: [
       {
-        path: 'add',
+        path: `:pageMode`,
         loadComponent: () =>
-          import('../app/complaint/complaint-add-component/complaint-add-component').then(
+          import('./complaint/complaint-add-edit-component/complaint-add-edit-component').then(
+            (c) => c.ComplaintAddComponent
+          ),
+      },
+      {
+        path: `:pageMode/:complaintId`,
+        loadComponent: () =>
+          import('./complaint/complaint-add-edit-component/complaint-add-edit-component').then(
             (c) => c.ComplaintAddComponent
           ),
       },

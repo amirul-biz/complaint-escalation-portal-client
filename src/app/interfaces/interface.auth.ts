@@ -3,7 +3,11 @@ export interface ILogin {
   password: string;
 }
 
-export interface IError {
+export interface IAuthError {
   status: number;
   message: string;
+}
+
+export interface IAuthToken {
+  token: string;
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   ICreateComplaintRequest,
+  IGetComplaintByIdResponse,
   IGetComplaintResponse,
   IGetPaginatedComplaintRequest,
   IGetPaginatedComplaintResponse,
@@ -19,8 +20,8 @@ export class ComplaintService {
 
   constructor(private http: HttpClient) {}
 
-  getComplaintById(id: string): Observable<IGetComplaintResponse> {
-    return this.http.get<IGetComplaintResponse>(`${this.apiUrl}/${id}`, {
+  getComplaintById(id: string): Observable<IGetComplaintByIdResponse> {
+    return this.http.get<IGetComplaintByIdResponse>(`${this.apiUrl}/complaints/${id}`, {
       withCredentials: true,
     });
   }
@@ -53,7 +54,7 @@ export class ComplaintService {
   }
 
   updateComplaint(id: string, request: IUpdateComplaintRequest): Observable<IGetComplaintResponse> {
-    return this.http.put<IGetComplaintResponse>(`${this.apiUrl}/${id}`, request, {
+    return this.http.patch<IGetComplaintResponse>(`${this.apiUrl}/complaints/${id}`, request, {
       withCredentials: true,
     });
   }
