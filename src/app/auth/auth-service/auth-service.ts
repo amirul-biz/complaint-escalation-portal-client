@@ -3,14 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
-import { ILogin, IAuthToken, IAuthError, IAuthErrorMessage } from '../../interfaces/interface.auth';
+import { IAuthErrorMessage, IAuthToken, ILogin } from '../../interfaces/interface.auth';
+import { environment } from '../../../environments/environment.dev';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'access_token';
-  private readonly apiUrl = 'http://localhost:3000';
   readonly $accessToken = new BehaviorSubject<string>('');
+  baseUrl = environment.apiUrl;
 
   constructor(
     private readonly http: HttpClient,
@@ -24,7 +26,7 @@ export class AuthService {
 
   login(req: ILogin): Observable<IAuthToken> {
     return this.http
-      .post<IAuthToken>(`${this.apiUrl}/login`, req, {
+      .post<IAuthToken>(`${this.baseUrl}/api/v1/auth/login`, req, {
         withCredentials: true,
       })
       .pipe(
@@ -36,7 +38,7 @@ export class AuthService {
 
   clearRefreshToken() {
     this.http
-      .delete(`${this.apiUrl}/logout`, {
+      .delete(`${this.baseUrl}/api/v1/logout`, {
         withCredentials: true,
       })
       .subscribe();
@@ -44,7 +46,7 @@ export class AuthService {
 
   getNewToken(): Observable<string> {
     return this.http
-      .get<IAuthToken>(`${this.apiUrl}/refresh-token`, {
+      .get<IAuthToken>(`${this.baseUrl}/api/v1/refresh-token`, {
         withCredentials: true,
       })
       .pipe(
