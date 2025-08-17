@@ -3,9 +3,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, from, of, switchMap, tap } from 'rxjs';
-import { IAuthError } from '../../../interfaces/interface.auth';
 import { AuthService } from '../auth-service/auth-service';
 import { getLoginForm } from './auth-login-form.config';
+import { IAuthError, IAuthErrorMessage } from '../../interfaces/interface.auth';
 
 @Component({
   selector: 'app-auth-login-component',
@@ -45,7 +45,7 @@ export class ComponentAuthLogin implements OnInit {
             this.#router.navigate(['/complaint']);
           }
         }),
-        catchError((error: IAuthError) => {
+        catchError((error: IAuthErrorMessage) => {
           return this.authService.httpErrorHandler(error);
         })
       )

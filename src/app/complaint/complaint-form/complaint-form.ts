@@ -15,4 +15,5 @@ export class ComplaintForm {
   @Input() form!: FormGroup<IComplaintFormModel>;
   @Input() priorityList!: IPriority[];
   @Input() statusList!: IStatus[];
+  @Input() isHideStatusField = false;
 }

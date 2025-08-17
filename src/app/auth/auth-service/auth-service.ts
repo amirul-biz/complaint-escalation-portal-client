@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
-import { IAuthError, IAuthToken, ILogin } from '../../../interfaces/interface.auth';
+import { ILogin, IAuthToken, IAuthError, IAuthErrorMessage } from '../../interfaces/interface.auth';
 @Injectable({
   providedIn: 'root',
 })
@@ -116,8 +116,11 @@ export class AuthService {
     }
   }
 
-  httpErrorHandler(error: IAuthError) {
-    alert(`error status: ${error.status}\nmessage: ${error.message}`);
+  httpErrorHandler(error: IAuthErrorMessage) {
+    console.log(error.error.status);
+    console.log(error.error.error);
+
+    alert(`error status: ${error.error.status}\nmessage: ${error.error.error}`);
     return of(null);
   }
 }

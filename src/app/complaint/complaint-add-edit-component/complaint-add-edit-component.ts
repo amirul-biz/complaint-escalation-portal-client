@@ -1,15 +1,15 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { catchError, tap, forkJoin } from 'rxjs';
+import { catchError, forkJoin, tap } from 'rxjs';
+import { AuthService } from '../../auth/auth-service/auth-service';
+import { IAuthError, IAuthErrorMessage } from '../../interfaces/interface.auth';
 import { ComplaintForm } from '../complaint-form/complaint-form';
 import { getComplaintForm } from '../complaint-form/complaint-form.config';
 import { ComplaintService } from '../complaint-service/complaint-service';
 import { StatusEnum } from '../complaint.enums';
 import { ICreateComplaintRequest, IPriority, IStatus } from '../complaint.interface';
 import { ComplaintPageModeEnum } from '../complaint.pageMode.enum';
-import { IAuthError } from '../../interfaces/interface.auth';
-import { AuthService } from '../../component/auth/auth-service/auth-service';
 
 @Component({
   selector: 'app-complaint-add-edit-component',
@@ -37,12 +37,12 @@ export class ComplaintAddComponent {
 
   getMetadata() {
     const statusList = this.complaintService.getStatuses().pipe(
-      catchError((error: IAuthError) => {
+      catchError((error: IAuthErrorMessage) => {
         return this.authService.httpErrorHandler(error);
       })
     );
     const priorityList = this.complaintService.getPriorities().pipe(
-      catchError((error: IAuthError) => {
+      catchError((error: IAuthErrorMessage) => {
         return this.authService.httpErrorHandler(error);
       })
     );
@@ -77,7 +77,7 @@ export class ComplaintAddComponent {
           const disabledControl = [controls.title, controls.description, controls.priorityId];
           disabledControl.forEach((control) => control.disable());
         }),
-        catchError((error: IAuthError) => {
+        catchError((error: IAuthErrorMessage) => {
           return this.authService.httpErrorHandler(error);
         })
       )
@@ -97,7 +97,7 @@ export class ComplaintAddComponent {
           alert('New Complaint created Successfully');
           this.location.back();
         }),
-        catchError((error: IAuthError) => {
+        catchError((error: IAuthErrorMessage) => {
           return this.authService.httpErrorHandler(error);
         })
       )
@@ -115,7 +115,7 @@ export class ComplaintAddComponent {
           alert('Complaint updated Successfully');
           this.location.back();
         }),
-        catchError((error: IAuthError) => {
+        catchError((error: IAuthErrorMessage) => {
           return this.authService.httpErrorHandler(error);
         })
       )

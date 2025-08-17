@@ -1,9 +1,9 @@
 import { HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
-import { HttpStatusCodeEnum } from '../../../enums/enum.httpStatusCode';
-import { IAuthError } from '../../../interfaces/interface.auth';
 import { AuthService } from '../auth-service/auth-service';
+import { HttpStatusCodeEnum } from '../../enums/enum.httpStatusCode';
+import { IAuthError } from '../../interfaces/interface.auth';
 
 const addBearerToken = (req: HttpRequest<any>, token: string): HttpRequest<any> => {
   return req.clone({
