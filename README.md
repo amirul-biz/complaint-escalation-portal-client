@@ -38,18 +38,7 @@ cd complaint-portal-frontend
 # 3. Install dependencies
 npm install
 
-# 4. Create environment file
-Create a file at:
-src/environments/environment.ts
-
-Paste the following (update values if needed):
-
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000/api/v1',
-};
-
-# 5. Start the Angular development server
+# 4. Start the Angular development server
 ng serve
 
 # 6. Access the app
