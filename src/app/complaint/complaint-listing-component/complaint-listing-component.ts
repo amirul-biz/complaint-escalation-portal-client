@@ -12,8 +12,8 @@ import {
 } from './complaint-listing-form.config';
 import { Router, RouterModule } from '@angular/router';
 import { ComplaintPageModeEnum } from '../complaint.pageMode.enum';
-import { IAuthError } from '../../interfaces/interface.auth';
-import { AuthService } from '../../component/auth/auth-service/auth-service';
+import { IAuthError, IAuthErrorMessage } from '../../interfaces/interface.auth';
+import { AuthService } from '../../auth/auth-service/auth-service';
 
 @Component({
   selector: 'app-complaint-listing-component',
@@ -44,7 +44,7 @@ export class ComplaintListingComponent implements OnInit {
         this.complaintData = response;
         this.cdr.markForCheck();
       }),
-      catchError((error: IAuthError) => {
+      catchError((error: IAuthErrorMessage) => {
         return this.authService.httpErrorHandler(error);
       })
     );
@@ -56,7 +56,7 @@ export class ComplaintListingComponent implements OnInit {
         this.statusList = response;
         this.cdr.markForCheck();
       }),
-      catchError((error: IAuthError) => {
+      catchError((error: IAuthErrorMessage) => {
         return this.authService.httpErrorHandler(error);
       })
     );

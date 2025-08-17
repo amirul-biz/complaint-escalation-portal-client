@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../component/auth/auth-service/auth-service';
+import { AuthService } from '../../auth/auth-service/auth-service';
 @Component({
   selector: 'app-complaint-component',
   imports: [RouterModule],

@@ -9,10 +9,10 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { routes } from './app.routes';
-import { AuthInterceptor } from './component/auth/auth-interceptor/auth-interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { AuthInterceptor } from './auth/auth-interceptor/auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
