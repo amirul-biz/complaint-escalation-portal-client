@@ -11,17 +11,18 @@ import {
   IStatus,
   IUpdateComplaintRequest,
 } from '../complaint.interface';
+import { environment } from '../../../environments/environment.dev';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ComplaintService {
-  private readonly apiUrl = 'http://localhost:3000';
+  private readonly baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   getComplaintById(id: string): Observable<IGetComplaintByIdResponse> {
-    return this.http.get<IGetComplaintByIdResponse>(`${this.apiUrl}/complaints/${id}`, {
+    return this.http.get<IGetComplaintByIdResponse>(`${this.baseUrl}/api/v1/complaints/${id}`, {
       withCredentials: true,
     });
   }
@@ -41,32 +42,39 @@ export class ComplaintService {
       params = params.set('statusId', req.statusId);
     }
 
-    return this.http.get<IGetPaginatedComplaintResponse>(`${this.apiUrl}/complaints-listing`, {
-      params,
-      withCredentials: true,
-    });
+    return this.http.get<IGetPaginatedComplaintResponse>(
+      `${this.baseUrl}/api/v1/complaints-listing`,
+      {
+        params,
+        withCredentials: true,
+      }
+    );
   }
 
   createComplaint(request: ICreateComplaintRequest): Observable<IGetComplaintResponse> {
-    return this.http.post<IGetComplaintResponse>(`${this.apiUrl}/complaints`, request, {
+    return this.http.post<IGetComplaintResponse>(`${this.baseUrl}/api/v1/complaints`, request, {
       withCredentials: true,
     });
   }
 
   updateComplaint(id: string, request: IUpdateComplaintRequest): Observable<IGetComplaintResponse> {
-    return this.http.patch<IGetComplaintResponse>(`${this.apiUrl}/complaints/${id}`, request, {
-      withCredentials: true,
-    });
+    return this.http.patch<IGetComplaintResponse>(
+      `${this.baseUrl}/api/v1/complaints/${id}`,
+      request,
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   getPriorities(): Observable<IPriority[]> {
-    return this.http.get<IPriority[]>(`${this.apiUrl}/priorities`, {
+    return this.http.get<IPriority[]>(`${this.baseUrl}/api/v1/priorities`, {
       withCredentials: true,
     });
   }
 
   getStatuses(): Observable<IStatus[]> {
-    return this.http.get<IStatus[]>(`${this.apiUrl}/statuses`, {
+    return this.http.get<IStatus[]>(`${this.baseUrl}/api/v1/statuses`, {
       withCredentials: true,
     });
   }
